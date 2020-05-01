@@ -21,4 +21,3 @@ class Piece:
         else:
             cordinate["x"] = self.positionX
             cordinate["y"] = self.positionY
-    
