@@ -5,6 +5,11 @@ class Pawn(Piece):
         Piece.__init__(self,name,color,positionX,positionY,image)
         self.moved = False
 
+    def update_position(self,positionX,positionY):
+        self.positionX = positionX
+        self.positionY = positionY
+        self.moved = True
+
     def move(self,new_position_x,new_position_y):
         distanceX = new_position_x - self.positionX
         distanceY = new_position_y - self.positionY
@@ -37,12 +42,4 @@ class Pawn(Piece):
                     self.update_position(new_position_x,new_position_y)
             else:
                 return False            
-
-
-    def update_position(self,positionX,positionY):
-        self.positionX = positionX
-        self.positionY = positionY
-        self.moved = True
-
-  
     
