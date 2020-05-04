@@ -34,9 +34,13 @@ class GameBoard:
     def set_pieces(self):
         pieces = []
         for i in range(1,9):
-            pawn = Pawn("Pawn","Black",2,i,"[ \u2659  ]")
+            pawn = Pawn("Pawn","Black",2,i,"[ \u265F  ]")
+            pieces.append(pawn)
+        for i in range(1,9):
+            pawn = Pawn("Pawn","White",7,i,"[ \u2659  ]")
             pieces.append(pawn)
         return pieces
+
         
 
 
