@@ -26,10 +26,15 @@ class Pawn(Piece):
             #If just move just move one cell and must be positive
             elif distanceLine == (1 * direction):
                 self.update_position(new_position)
+            else:
+                return False
         #This move kill the other piece enemy
-        elif (distanceLine == (1 * direction) and distanceColumn == (1 * direction)):
-            if board[new_position["line"]][new_position["column"]].color != self.color:
+        elif (issubclass(type(board[new_position["line"]][new_position["column"]]),Piece) and 
+            distanceLine == (1 * direction) and distanceColumn == (1 * direction)):
+            if (board[new_position["line"]][new_position["column"]].color != self.color):
                 self.update_position(new_position)
+            else:
+                return False
         else:
             return False
 

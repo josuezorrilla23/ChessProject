@@ -41,6 +41,7 @@ class GameBoard:
     def get_piece(self,position):
         if self.is_piece(position):
             return self.board[position["line"]][position["column"]]
+        return False
     
     def is_piece(self,position):
         return issubclass(type(self.board[position["line"]][position["column"]]),Piece)
@@ -49,7 +50,6 @@ class GameBoard:
         
         self.board[1][4] = Queen("Queen","Black",1,4,"[ \u265B  ]")
         self.board[8][4] = Queen("Queen","White",8,4,"[ \u2655  ]")
-        self.board[8][2] = Knight("Knight","White",8,2,"[ \u265E  ]")
         for i in range(1,9):
             self.board[2][i] = Pawn("Pawn","Black",2,i,"[ \u265F  ]")
             self.board[7][i] = Pawn("Pawn","White",7,i,"[ \u2659  ]")
@@ -76,10 +76,15 @@ class GameBoard:
             return False
     
     def decode_cordinate(self,cord_str):
+        if len(cord_str) != 2:
+            return False
         cordinate = dict()
-        cordinate["line"] = 9 - int(cord_str[1:])
+        cordinate["line"] = 57 - ord(cord_str[1:])
         cordinate["column"] = ord(cord_str[0:1]) - 64
-        return cordinate
+        if(cordinate["line"] < 1 or cordinate["line"] > 8) or (cordinate["column"] < 1 or cordinate["column"] > 8):
+            return False
+        else:
+            return cordinate
     
     def move_in_range(self,cordinate):
         #tengo que mejorar
@@ -94,10 +99,11 @@ class GameBoard:
             pieceGet = self.ask_piece(self.players[i%2])
             if pieceGet == None:
                 break
-            self.ask_new_position(pieceGet)
-            # else:
-            #     print("Invalid move")
-            #self.ask_play()
+            if pieceGet == False:
+                pieceGet = self.ask_piece(self.players[i%2])
+            while self.ask_new_position(pieceGet) == False:
+                print("Move is not allowed.")
+            self.draw_board()
             i += 1
 
     def quit_game(self):
@@ -115,22 +121,24 @@ class GameBoard:
         self.draw_board()
         self.set_player()
         self.set_pieces_player()
-        position = dict()
-        position["line"] = 2
-        position["column"] = 1
-        print(self.get_piece(position))
-        # print(self.players[0])
-        # print(self.players[1])
         self.ask_play()
     
     def ask_piece(self,player:Player):
-        position_str = input(player.name +" "+"Wich piece do you want to move: ")
+        position_str = input(player.name +" "+"Wich piece do you want to move: ").upper()
         if position_str == "Q":
             if(self.quit_game() == True):
                 return None
+        
         position = self.decode_cordinate(position_str)
+        while position == False:
+            print("Invalid position, must start with a letter, betwen A and H, \n and the last must be a digit betwen 1 and 10")
+            return self.ask_piece(player)
+
         piece_get = self.get_piece(position)
-        if self.move_in_range(position):
+        if piece_get == False:
+            print("Cell empty another cell.")
+            return self.ask_piece(player)
+        elif self.move_in_range(position):
             if player.color == piece_get.color:
                 return self.get_piece(position)
             else:
@@ -141,26 +149,29 @@ class GameBoard:
             return self.ask_piece(player)
 
     def ask_new_position(self,piece):
-        new_position = self.decode_cordinate(input("Where you want to locate your piece: "))
-        if piece.piece_in_path(self.board,new_position) and type(piece) != Knight:
+
+        new_position = self.decode_cordinate(input("Where you want to locate your piece: ").upper())
+
+        if new_position == False:
+            print("Invalid position, must start with a letter, betwen A and H, \n and the last must be a digit betwen 1 and 10")
+            return self.ask_new_position(piece)
+        
+        if piece.piece_in_path(self.board,new_position):
             print("There is a piece in the midle, you cant move")
-            self.ask_new_position(piece)
+            return False
+        
+        last_line = piece.posLine
+        last_column = piece.posColumn
+        succes = piece.move(new_position,self.board)
+
+        if succes != False:
+            self.board[last_line][last_column] = "[    ]"
+            self.board[new_position["line"]][new_position["column"]] = piece
+            return True
         else:
-            self.board[piece.posLine][piece.posColumn] = "[    ]"
-            piece.move(new_position,self.board)
-            self.board[piece.posLine][piece.posColumn] = piece
-            self.draw_board()
+            return False
+
 
 juego = GameBoard()
-
-#juego.draw_board()
-
-# pcs = juego.set_pieces()
-# for p in pcs:
-#     juego.draw_piece(p)
-#juego.draw_board()
-
 juego.start_game()
-print(juego.players[0])
-print(juego.players[1])
-print(juego.pieces)
+

@@ -12,7 +12,9 @@ class Queen(Piece):
         
         if (distanceLine == distanceColumn):
             self.update_position(new_position)
-        if (distanceLine > 0 and distanceColumn ==0):
+        elif (distanceLine > 0 and distanceColumn ==0):
             self.update_position(new_position)
-        if (distanceLine == 0 and distanceColumn >0):
+        elif (distanceLine == 0 and distanceColumn >0):
             self.update_position(new_position)
+        else:
+            return False

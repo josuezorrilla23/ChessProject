@@ -30,9 +30,8 @@ class Piece:
         return distanceLine, distanceColumn 
 
     def piece_in_path(self,board,new_position):
+        
         dist_line, dist_column = self.calculate_distance(new_position)
-        from_position = 0
-        to_position = 0
         
         if self.posLine < new_position["line"]:
             from_position = self.posLine + 1
