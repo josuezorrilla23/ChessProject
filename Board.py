@@ -174,4 +174,3 @@ class GameBoard:
 
 juego = GameBoard()
 juego.start_game()
-

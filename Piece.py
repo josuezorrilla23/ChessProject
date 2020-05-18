@@ -48,4 +48,3 @@ class Piece:
             if issubclass(type(board[new_position["line"]][new_position["column"]]),Piece):
                     return True        
         return False
-

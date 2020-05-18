@@ -11,8 +11,5 @@ class Player:
             strp += p.__str__()
         return strp
     
-    
-        
-        return piece
     def __str__(self):
         return "Name: " + self.name + ", Color: " + self.color + " , Piezas: \n" + self.str__pieces()
