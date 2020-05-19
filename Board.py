@@ -153,7 +153,7 @@ class GameBoard:
         new_position = self.decode_cordinate(input("Where you want to locate your piece: ").upper())
 
         if new_position == False:
-            print("Invalid position, must start with a letter, betwen A and H, \n and the last must be a digit betwen 1 and 10")
+            print("Invalid position, must start with a letter, betwen A and H, \n and the last must be a digit betwen 1 and 8")
             return self.ask_new_position(piece)
         
         if piece.piece_in_path(self.board,new_position):
